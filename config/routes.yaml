@@ -1,3 +1,27 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: App\Controller\IndexController::index
+logInfo:
+  path: /logInfo
+  controller: App\Controller\LogController::logInfo
+logError:
+  path: /logError
+  controller: App\Controller\LogController::logError
+logAlert:
+  path: /logAlert
+  controller: App\Controller\LogController::logAlert
+logCritical:
+  path: /logCritical
+  controller: App\Controller\LogController::logCritical
+logEmergency:
+  path: /logEmergency
+  controller: App\Controller\LogController::logEmergency
+logDebug:
+  path: /logDebug
+  controller: App\Controller\LogController::logDebug
+logWarning:
+  path: /logWarning
+  controller: App\Controller\LogController::logWarning
+logNotice:
+  path: /logNotice
+  controller: App\Controller\LogController::logNotice
