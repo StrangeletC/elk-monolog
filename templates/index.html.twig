@@ -12,4 +12,21 @@
         <button type="submit" name="logLevel" value="notice">❕ Log notice</button>
         <button type="submit" name="logLevel" value="custom_log_level">👻 Custom log level (exception)</button>
     </form>
+    <form method="post" name="Create many logs" action="/createManyLogs">
+        <label>Count:<input type="number" name="batchSize" min="1"></label>
+        <label>Log type:
+             <select name="logLevel">
+                 <option value="emergency">🔥 Log emergency</option>
+                 <option value="info">ℹ️ Log info</option>
+                 <option value="error">❌ Log error</option>
+                 <option value="alert">❗ Log alert</option>
+                 <option value="critical">🌡️ Log critical</option>
+                 <option value="debug">🐞 Log debug</option>
+                 <option value="warning">⚠️ Log warning</option>
+                 <option value="notice">❕ Log notice</option>
+                 <option value="custom_log_level">👻 Custom log level (exception)</option>
+             </select>
+        </label>
+        <button type="submit">Create!</button>
+    </form>
 {% endblock %}

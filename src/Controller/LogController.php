@@ -32,7 +32,7 @@ class LogController extends AbstractController
     public function createManyLogs(Request $request): Response
     {
         $logLevel = $request->request->get('logLevel');
-        $batchSize = $request->request->get('batchSize');
+        $batchSize = (int)$request->request->get('batchSize');
 
         $this->logService->createLogByLevelInBatch($batchSize, $logLevel);
 
