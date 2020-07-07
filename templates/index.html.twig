@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form>
-        <button type="submit" formmethod="post" formaction="/logInfo">ℹ️ Log info</button>
-        <button type="submit" formmethod="post" formaction="/logError">❌ Log error</button>
-        <button type="submit" formmethod="post" formaction="/logAlert">❗ Log alert</button>
-        <button type="submit" formmethod="post" formaction="/logCritical">🌡️ Log critical</button>
-        <button type="submit" formmethod="post" formaction="/logEmergency">🔥 Log emergency</button>
-        <button type="submit" formmethod="post" formaction="/logDebug">🐞 Log debug</button>
-        <button type="submit" formmethod="post" formaction="/logWarning">⚠️ Log warning</button>
-        <button type="submit" formmethod="post" formaction="/logNotice">❕ Log notice</button>
+    <form method="post" name="Create one log" action="/createOneLog">
+        <button type="submit" name="logLevel" value="emergency">🔥 Log emergency</button>
+        <button type="submit" name="logLevel" value="info">ℹ️ Log info</button>
+        <button type="submit" name="logLevel" value="error">❌ Log error</button>
+        <button type="submit" name="logLevel" value="alert">❗ Log alert</button>
+        <button type="submit" name="logLevel" value="critical">🌡️ Log critical</button>
+        <button type="submit" name="logLevel" value="debug">🐞 Log debug</button>
+        <button type="submit" name="logLevel" value="warning">⚠️ Log warning</button>
+        <button type="submit" name="logLevel" value="notice">❕ Log notice</button>
+        <button type="submit" name="logLevel" value="custom_log_level">👻 Custom log level (exception)</button>
     </form>
 {% endblock %}
