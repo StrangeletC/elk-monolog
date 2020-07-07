@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
+use App\Services\LogService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -12,67 +13,38 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class LogController extends AbstractController
 {
-    private LoggerInterface $logger;
+    private LogService $logService;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LogService $logService)
     {
-        $this->logger = $logger;
+        $this->logService = $logService;
     }
 
-    public function logInfo(): Response
+    public function createOneLog(Request $request): Response
     {
-        $this->logger->info('INFO MESSAGE ' . time());
+        $logLevel = $request->request->get('logLevel');
+
+        $this->logService->createLogByLevel($logLevel);
 
         return $this->redirect('/');
     }
 
-    public function logError(): Response
+    public function createManyLogs(Request $request): Response
     {
-        $this->logger->error('ERROR MESSAGE ' . time());
+        $logLevel = $request->request->get('logLevel');
+        $batchSize = $request->request->get('batchSize');
+
+        $this->logService->createLogByLevelInBatch($batchSize, $logLevel);
 
         return $this->redirect('/');
     }
 
-    public function logAlert(): Response
+    public function createManyRandomLogs(Request $request): Response
     {
-        $this->logger->alert('ALERT MESSAGE ' . time());
+        $batchSize = $request->request->get('batchSize');
+
+        $this->logService->createRandomLogInBatch($batchSize);
 
         return $this->redirect('/');
     }
-
-    public function logCritical(): Response
-    {
-        $this->logger->critical('CRITICAL MESSAGE ' . time());
-
-        return $this->redirect('/');
-    }
-
-    public function logEmergency(): Response
-    {
-        $this->logger->emergency('EMERGENCY MESSAGE ' . time());
-
-        return $this->redirect('/');
-    }
-
-    public function logDebug(): Response
-    {
-        $this->logger->debug('DEBUG MESSAGE ' . time());
-
-        return $this->redirect('/');
-    }
-
-    public function logWarning(): Response
-    {
-        $this->logger->warning('WARNING MESSAGE ' . time());
-
-        return $this->redirect('/');
-    }
-
-    public function logNotice(): Response
-    {
-        $this->logger->notice('NOTICE MESSAGE ' . time());
-
-        return $this->redirect('/');
-    }
-
 }
