@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  php:
+    image: php:7.4-fpm
+    working_dir: /
+    container_name: elk_stack_php
+    restart: on-failure
+    volumes:
+      - ./:/var/www/
+    networks:
+      - elk-stack-network
+  nginx:
+    image: nginx:latest
+    container_name: elk_stack_nginx
+    restart: on-failure
+    ports:
+      - '8089:80'
+    volumes:
+      - ./public/:/var/www/public
+      - ./docker/nginx/server.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - elk-stack-network
+networks:
+  elk-stack-network:
+    driver: bridge
