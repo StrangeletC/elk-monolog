@@ -34,7 +34,7 @@ class LogService
         $logLevels = $this->getLogLevels();
 
         for ($iterator = 1; $iterator <= $batchSize; $iterator++) {
-            $randomIndex = random_int(0, count($logLevels));
+            $randomIndex = random_int(0, count($logLevels) - 1);
 
             $this->createLogByLevel($logLevels[$randomIndex]);
         }
