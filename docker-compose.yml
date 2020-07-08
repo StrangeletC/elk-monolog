@@ -53,6 +53,8 @@ services:
       - '9600:9600'
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk-monolog-network
     depends_on:
       - elasticsearch
   kibana:
@@ -69,10 +71,34 @@ services:
       - elk-monolog-network
     depends_on:
       - elasticsearch
-
+  filebeat:
+    build:
+      context: docker/filebeat
+      args:
+        ELK_VERSION: $ELK_VERSION
+    hostname: "{{.Node.Hostname}}-filebeat"
+    user: root
+    volumes:
+      - ./docker/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - filebeat:/usr/share/filebeat/data
+      - /var/lib/docker/containers:/usr/share/dockerlogs/data:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+#      - /var/log/:/var/log/:ro
+    environment:
+      - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST:-node1}
+      - KIBANA_HOST=${KIBANA_HOST:-node1}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME:-elastic}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
+    container_name: elk_monolog_filebeat
+    command: ["--strict.perms=false"]
+    networks:
+      - elk-monolog-network
+    depends_on:
+      - elasticsearch
 networks:
   elk-monolog-network:
     driver: bridge
 
 volumes:
   elasticsearch:
+  filebeat:
