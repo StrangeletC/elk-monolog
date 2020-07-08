@@ -3,15 +3,15 @@ services:
   php:
     image: php:7.4-fpm
     working_dir: /
-    container_name: elk_stack_php
+    container_name: elk_monolog_php
     restart: on-failure
     volumes:
       - ./:/var/www/
     networks:
-      - elk-stack-network
+      - elk-monolog-network
   nginx:
     image: nginx:latest
-    container_name: elk_stack_nginx
+    container_name: elk_monolog_nginx
     restart: on-failure
     ports:
       - '8089:80'
@@ -19,7 +19,60 @@ services:
       - ./public/:/var/www/public
       - ./docker/nginx/server.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - elk-stack-network
+      - elk-monolog-network
+  elasticsearch:
+    build:
+      context: docker/elasticsearch
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./docker/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    container_name: elk_monolog_elasticsearch
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
+      discovery.type: single-node
+    restart: on-failure
+    networks:
+      - elk-monolog-network
+  logstash:
+    build:
+      context: docker/logstash
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./docker/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./docker/logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - '5000:5000/tcp'
+      - '5000:5000/udp'
+      - '9600:9600'
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+  kibana:
+    build:
+      context: docker/kibana
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./docker/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    container_name: elk_monolog_kibana
+    ports:
+      - '5601:5601'
+    networks:
+      - elk-monolog-network
+    depends_on:
+      - elasticsearch
+
 networks:
-  elk-stack-network:
+  elk-monolog-network:
     driver: bridge
+
+volumes:
+  elasticsearch:
